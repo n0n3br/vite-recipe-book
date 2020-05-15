@@ -2,10 +2,10 @@
   <div class="container has-margin-top-20">
     <div class="columns">
       <div class="column">
-        <input type="text" class="input" v-model="searchInput" />
+        <input type="text" class="input" v-model="searchInput" placeholder="Search" />
       </div>
       <div class="column is-narrow">
-        <button class="button is-primary" @click="toogleModal">Add</button>
+        <button class="button is-primary" @click="addIngredient">Add</button>
       </div>
     </div>
     <div class="columns">
@@ -77,6 +77,11 @@ export default {
       toogleModal();
     };
 
+    const addIngredient = () => {
+      modalIngredient.value = {};
+      toogleModal();
+    };
+
     const toogleModal = () => {
       isModalOpen.value = !isModalOpen.value;
     };
@@ -89,6 +94,7 @@ export default {
       canRemoveIngredient,
       removeIngredient,
       updateIngredient,
+      addIngredient,
       modalIngredient,
       searchInput
     };

@@ -21,8 +21,9 @@ export const useIngredients = () => ({
         );
     },
     update: (ingredient) => {
+        console.log("update", ingredient);
         ingredients.value = ingredients.value.map((mapIngredient) =>
-            mapIngredient.id != ingredient.id ? mapIngredient : ingredient
+            mapIngredient.id !== ingredient.id ? mapIngredient : ingredient
         );
     },
 });
