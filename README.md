@@ -2,7 +2,7 @@
 
 Recipe book made with Vite, Vue3, VueRouter4 and Bulma.
 
-Vue3 Composition API is being used for state management.
+Vue3 Composition API is being used for state management, and the state is persisted in localStorage.
 
 You can add, update and remove ingredients or recipes.
 
