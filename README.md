@@ -2,6 +2,12 @@
 
 Recipe book made with Vite, Vue3, VueRouter4 and Bulma.
 
-I'ts using composition api to replace VueX.
+Vue3 Composition API is being used for state management.
 
-Work in progress.
+You can add, update and remove ingredients or recipes.
+
+## Preview images
+
+![preview1](./img/preview_1.gif)
+
+![preview2](./img/preview_2.gif)

@@ -8,7 +8,7 @@
         <button class="button is-primary" @click="create">Create</button>
       </div>
     </div>
-    <div class="columns">
+    <div class="columns is-multiline">
       <template v-if="!list.length">
         <div class="column has-text-centered has-margin-top-40">
           <h1 class="title">This list is empty</h1>
