@@ -1,4 +1,4 @@
-import { ref, computed, watch } from "vue";
+import { ref, watch } from "vue";
 
 const id = () => "_" + Math.random().toString(36).substr(2, 9);
 
@@ -11,13 +11,13 @@ watch(ingredients, (value) =>
     localStorage.setItem("ingredients", JSON.stringify(value))
 );
 export const useIngredients = () => ({
-    ingredients: computed(() => ingredients.value),
+    ingredients,
     create: (ingredient) => {
         ingredients.value = [...ingredients.value, { id: id(), ...ingredient }];
     },
-    remove: (ingredient) => {
+    remove: ({ id }) => {
         ingredients.value = ingredients.value.filter(
-            (filterIngredient) => filterIngredient.id !== ingredient.id
+            (filterIngredient) => filterIngredient.id !== id
         );
     },
     update: (ingredient) => {
@@ -32,22 +32,26 @@ const recipes = ref(
         ? JSON.parse(localStorage.getItem("recipes"))
         : []
 );
+
 watch(recipes, (value) =>
     localStorage.setItem("recipes", JSON.stringify(value))
 );
+
 export const useRecipes = () => ({
-    recipes: computed(() => recipes.value),
+    recipes,
     create: (recipe) => {
         recipes.value = [...recipes.value, { id: id(), ...recipe }];
     },
-    remove: (id) => {
-        recipes.value = recipes.value.filter(
-            (filterRecipe) => filterRecipe.id !== id
-        );
+    remove: ({ id }) => {
+        recipes.value = [
+            ...recipes.value.filter((filterRecipe) => filterRecipe.id !== id),
+        ];
     },
     update: (recipe) => {
-        recipes.value = recipes.value.map((mapRecipe) =>
-            mapRecipe.id != recipe.id ? mapRecipe : recipe
-        );
+        recipes.value = [
+            ...recipes.value.map((mapRecipe) =>
+                mapRecipe.id != recipe.id ? mapRecipe : recipe
+            ),
+        ];
     },
 });

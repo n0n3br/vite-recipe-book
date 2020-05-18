@@ -14,7 +14,7 @@
           <div class="field-body">
             <div class="field">
               <div class="control is-exanded">
-                <input type="text" class="input" v-model="newIngredient.title" />
+                <input type="text" class="input" v-model="modalIngredient.title" />
               </div>
             </div>
           </div>
@@ -26,7 +26,7 @@
           <div class="field-body">
             <div class="field">
               <div class="control is-exanded">
-                <input type="text" class="input" v-model="newIngredient.description" />
+                <input type="text" class="input" v-model="modalIngredient.description" />
               </div>
             </div>
           </div>
@@ -38,7 +38,7 @@
           <div class="field-body">
             <div class="field">
               <div class="control is-exanded">
-                <input type="url" class="input" v-model="newIngredient.image" />
+                <input type="url" class="input" v-model="modalIngredient.image" />
               </div>
             </div>
           </div>
@@ -46,8 +46,8 @@
         <div class="is-flex">
           <figure class="image is-128x128">
             <img
-              v-if="newIngredient.image"
-              :src="newIngredient.image"
+              v-if="modalIngredient.image"
+              :src="modalIngredient.image"
               alt="ingredient image preview"
             />
           </figure>
@@ -63,36 +63,31 @@
 
 <script>
 import { ref, computed } from "vue";
-import { useIngredients } from "../../store";
 export default {
   props: { ingredient: { type: [Object, Boolean], default: false } },
   setup(props, { emit }) {
-    const newIngredient = ref(
+    const modalIngredient = ref(
       props.ingredient || { title: "", description: "", image: "" }
     );
-
-    const store = useIngredients();
-
-    const ingredients = store.ingredients;
 
     const close = () => {
       emit("close");
     };
 
     const save = () => {
-      emit("save", { ingredient: newIngredient.value });
+      emit("save", { ingredient: modalIngredient.value });
     };
 
     const canSave = computed(
       () =>
-        newIngredient.value.title &&
-        newIngredient.value.description &&
-        newIngredient.value.image
+        modalIngredient.value.title &&
+        modalIngredient.value.description &&
+        modalIngredient.value.image
     );
 
     const title = `${props.ingredient.id ? "Edit" : "Add"} Ingredient`;
 
-    return { newIngredient, close, save, title, canSave };
+    return { modalIngredient, close, save, title, canSave };
   }
 };
 </script>

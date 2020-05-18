@@ -13,11 +13,12 @@
 </template>
 
 <script>
+import { computed } from "vue";
 import { useIngredients, useRecipes } from "../store";
 export default {
   setup() {
-    const { ingredients } = useIngredients();
-    const { recipes } = useRecipes();
+    const ingredients = computed(() => useIngredients().ingredients.value);
+    const recipes = computed(() => useRecipes().recipes.value);
     return { ingredients, recipes };
   }
 };

@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import List from "../UI/List.vue";
 import Modal from "./Modal.vue";
 import { useIngredients, useRecipes } from "../../store";
@@ -20,7 +20,7 @@ export default {
     const selectedIngredient = ref({});
 
     const ingredientsStore = useIngredients();
-    const { ingredients } = ingredientsStore;
+    const ingredients = computed(() => ingredientsStore.ingredients.value);
 
     const recipesStore = useRecipes();
 
@@ -34,6 +34,16 @@ export default {
     };
 
     const remove = ({ item }) => {
+      if (
+        recipesStore.recipes.value.some(findRecipe =>
+          findRecipe.ingredients.some(
+            someIngredient => someIngredient.id === item.id
+          )
+        )
+      ) {
+        alert("Ingredient can not be removed. It's used in some recipes");
+        return;
+      }
       ingredientsStore.remove(item);
     };
 
