@@ -12,7 +12,7 @@ watch(ingredients, (value) =>
 );
 export const useIngredients = () => ({
     ingredients: computed(() => ingredients.value),
-    add: (ingredient) => {
+    create: (ingredient) => {
         ingredients.value = [...ingredients.value, { id: id(), ...ingredient }];
     },
     remove: (ingredient) => {
@@ -21,7 +21,6 @@ export const useIngredients = () => ({
         );
     },
     update: (ingredient) => {
-        console.log("update", ingredient);
         ingredients.value = ingredients.value.map((mapIngredient) =>
             mapIngredient.id !== ingredient.id ? mapIngredient : ingredient
         );
@@ -38,7 +37,7 @@ watch(recipes, (value) =>
 );
 export const useRecipes = () => ({
     recipes: computed(() => recipes.value),
-    add: (recipe) => {
+    create: (recipe) => {
         recipes.value = [...recipes.value, { id: id(), ...recipe }];
     },
     remove: (id) => {
