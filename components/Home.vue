@@ -4,8 +4,8 @@
       <div class="container has-text-centered">
         <h1 class="title">Welcome to ViteRecipeBook</h1>
         <p class="subtitle">
-          You have {{ recipes.length }} recipes and
-          {{ ingredients.length }} ingredients stored
+          You have {{ data.recipes.length }} recipes and
+          {{ data.ingredients.length }} ingredients stored
         </p>
       </div>
     </div>
@@ -13,13 +13,16 @@
 </template>
 
 <script>
-import { computed } from "vue";
-import { useIngredients, useRecipes } from "../store";
+import { reactive } from "vue";
+import { useStore } from "../store";
 export default {
   setup() {
-    const ingredients = computed(() => useIngredients().ingredients.value);
-    const recipes = computed(() => useRecipes().recipes.value);
-    return { ingredients, recipes };
+    const store = useStore();
+    const data = reactive({
+      ingredients: store.ingredients,
+      recipes: store.recipes
+    });
+    return { data };
   }
 };
 </script>

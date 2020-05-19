@@ -1,55 +1,56 @@
 <template>
-  <List :list="recipes" @create="toogleModal" @remove="remove" @update="update" />
+  <List :list="data.recipes" @create="toogleModal" @remove="remove" @update="update" />
   <Modal
-    :recipe="modalRecipe"
-    v-if="isModalOpen"
+    :recipe="data.modalRecipe"
+    v-if="data.isModalOpen"
     @close="toogleModal"
-    :ingredients="ingredients"
+    :ingredients="data.ingredients"
     @save="save"
   />
 </template>
 
 <script>
-import { ref, computed } from "vue";
-import { useRecipes, useIngredients } from "../../store";
+import { reactive, computed } from "vue";
+import { useStore } from "../../store";
 import List from "../UI/List.vue";
 import Modal from "./Modal.vue";
 export default {
   components: { List, Modal },
   setup() {
-    const isModalOpen = ref(false);
-    const toogleModal = () => (isModalOpen.value = !isModalOpen.value);
+    const store = useStore();
 
-    const modalRecipe = ref(false);
+    const data = reactive({
+      isModalOpen: false,
+      modalRecipe: false,
+      recipes: store.recipes,
+      ingredients: store.ingredients
+    });
 
-    const recipesStore = useRecipes();
-    const recipes = computed(() => recipesStore.recipes.value);
-    const ingredients = computed(() => useIngredients().ingredients.value);
+    const toogleModal = () => {
+      data.isModalOpen = !data.isModalOpen;
+    };
 
     const save = ({ recipe }) => {
       if (recipe.id) {
-        recipesStore.update(recipe);
+        store.updateRecipe(recipe);
       } else {
-        recipesStore.create(recipe);
+        store.createRecipe(recipe);
       }
       toogleModal();
     };
 
     const update = ({ item }) => {
-      modalRecipe.value = item;
+      data.modalRecipe = item;
       toogleModal();
     };
 
     const remove = ({ item }) => {
-      recipesStore.remove(item);
+      store.removeRecipe(item);
     };
 
     return {
-      recipes,
-      ingredients,
-      isModalOpen,
       toogleModal,
-      modalRecipe,
+      data,
       save,
       remove,
       update

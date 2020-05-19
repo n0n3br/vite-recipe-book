@@ -1,41 +1,47 @@
 <template>
-  <List :list="ingredients" @create="toogleModal" @update="toogleModal" @remove="remove" />
-  <Modal @save="save" :ingredient="selectedIngredient" @close="toogleModal" v-if="isModalOpen" />
+  <List :list="data.ingredients" @create="toogleModal" @update="toogleModal" @remove="remove" />
+  <Modal
+    @save="save"
+    :ingredient="data.selectedIngredient"
+    @close="toogleModal"
+    v-if="data.isModalOpen"
+  />
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { reactive, computed } from "vue";
 import List from "../UI/List.vue";
 import Modal from "./Modal.vue";
-import { useIngredients, useRecipes } from "../../store";
+import { useStore } from "../../store";
 export default {
   components: { List, Modal },
   setup() {
-    const isModalOpen = ref(false);
+    const store = useStore();
+
+    const data = reactive({
+      isModalOpen: false,
+      selectedIngredient: {},
+      ingredients: store.ingredients,
+      recipes: store.recipes
+    });
+
     const toogleModal = (params = {}) => {
-      selectedIngredient.value = params.item || false;
-      isModalOpen.value = !isModalOpen.value;
+      data.selectedIngredient = params.item || false;
+      data.isModalOpen = !data.isModalOpen;
     };
-
-    const selectedIngredient = ref({});
-
-    const ingredientsStore = useIngredients();
-    const ingredients = computed(() => ingredientsStore.ingredients.value);
-
-    const recipesStore = useRecipes();
 
     const save = ({ ingredient }) => {
       if (ingredient.id) {
-        ingredientsStore.update(ingredient);
+        store.updateIngredient(ingredient);
       } else {
-        ingredientsStore.create(ingredient);
+        store.createIngredient(ingredient);
       }
       toogleModal();
     };
 
     const remove = ({ item }) => {
       if (
-        recipesStore.recipes.value.some(findRecipe =>
+        data.recipes.some(findRecipe =>
           findRecipe.ingredients.some(
             someIngredient => someIngredient.id === item.id
           )
@@ -44,16 +50,14 @@ export default {
         alert("Ingredient can not be removed. It's used in some recipes");
         return;
       }
-      ingredientsStore.remove(item);
+      store.removeIngredient(item);
     };
 
     return {
-      ingredients,
       save,
       remove,
-      selectedIngredient,
-      toogleModal,
-      isModalOpen
+      data,
+      toogleModal
     };
   }
 };

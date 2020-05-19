@@ -1,55 +1,45 @@
-import { ref, watch } from "vue";
+import { reactive, watch, computed } from "vue";
 
 const id = () => "_" + Math.random().toString(36).substr(2, 9);
 
-const ingredients = ref(
-    localStorage.getItem("ingredients")
-        ? JSON.parse(localStorage.getItem("ingredients"))
-        : []
+const storeName = "vite-recipe-book-state";
+
+const state = reactive(
+    localStorage.getItem(storeName)
+        ? JSON.parse(localStorage.getItem(storeName))
+        : {
+              ingredients: [],
+              recipes: [],
+          }
 );
-watch(ingredients, (value) =>
-    localStorage.setItem("ingredients", JSON.stringify(value))
-);
-export const useIngredients = () => ({
-    ingredients,
-    create: (ingredient) => {
-        ingredients.value = [...ingredients.value, { id: id(), ...ingredient }];
+watch(state, (value) => localStorage.setItem(storeName, JSON.stringify(value)));
+export const useStore = () => ({
+    ingredients: computed(() => state.ingredients),
+    recipes: computed(() => state.recipes),
+    createIngredient: (ingredient) => {
+        state.ingredients = [...state.ingredients, { id: id(), ...ingredient }];
     },
-    remove: ({ id }) => {
-        ingredients.value = ingredients.value.filter(
+    removeIngredient: ({ id }) => {
+        state.ingredients = state.ingredients.filter(
             (filterIngredient) => filterIngredient.id !== id
         );
     },
-    update: (ingredient) => {
-        ingredients.value = ingredients.value.map((mapIngredient) =>
+    updateIngredient: (ingredient) => {
+        state.ingredients = state.ingredients.map((mapIngredient) =>
             mapIngredient.id !== ingredient.id ? mapIngredient : ingredient
         );
     },
-});
-
-const recipes = ref(
-    localStorage.getItem("recipes")
-        ? JSON.parse(localStorage.getItem("recipes"))
-        : []
-);
-
-watch(recipes, (value) =>
-    localStorage.setItem("recipes", JSON.stringify(value))
-);
-
-export const useRecipes = () => ({
-    recipes,
-    create: (recipe) => {
-        recipes.value = [...recipes.value, { id: id(), ...recipe }];
+    createRecipe: (recipe) => {
+        state.recipes = [...state.recipes, { id: id(), ...recipe }];
     },
-    remove: ({ id }) => {
-        recipes.value = [
-            ...recipes.value.filter((filterRecipe) => filterRecipe.id !== id),
+    removeRecipe: ({ id }) => {
+        state.recipes = [
+            ...state.recipes.filter((filterRecipe) => filterRecipe.id !== id),
         ];
     },
-    update: (recipe) => {
-        recipes.value = [
-            ...recipes.value.map((mapRecipe) =>
+    updateRecipe: (recipe) => {
+        state.recipes = [
+            ...state.recipes.map((mapRecipe) =>
                 mapRecipe.id != recipe.id ? mapRecipe : recipe
             ),
         ];
